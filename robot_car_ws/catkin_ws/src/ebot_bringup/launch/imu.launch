@@ -1,0 +1,6 @@
+<launch>
+    <node pkg="serial_imu"  type="serial_imu" name="imu_driver"  >
+        <param name="PortName" type="string" value="/dev/serial/by-id/usb-FTDI_Quad_RS232-HS-if02-port0"/>
+        <param name="frame_id" type="string" value="imu_link" />
+    </node>
+</launch>

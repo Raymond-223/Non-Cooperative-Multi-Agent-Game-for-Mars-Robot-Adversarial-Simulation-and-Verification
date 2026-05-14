@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<launch>
+    <node pkg="control_mapping" type="control_mapping_node" name="control_mapping_node" output="screen">
+        <param name="/raw_cmd_topic" value="/smoothed_cmd_vel"/>
+        <param name="/cmd_topic" value="/cmd_vel"/>
+        <param name="/coefficient" value="160"/>
+        <param name="/frequence" value="10"/>
+    </node>
+</launch>

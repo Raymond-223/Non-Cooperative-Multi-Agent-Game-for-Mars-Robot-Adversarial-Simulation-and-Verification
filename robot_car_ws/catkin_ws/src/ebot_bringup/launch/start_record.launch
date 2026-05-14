@@ -1,0 +1,12 @@
+<launch>
+  
+  <!-- 机器人实物启动 -->
+
+  <include file="$(find ebot_bringup)/launch/bringup.launch" />
+  
+  <include file="$(find ebot_bringup)/launch/slam.launch" />
+  <include file="$(find agilex_pure_pursuit)/launch/record_path.launch" />
+  
+
+  <!-- 机器人实物启动 -->
+</launch>

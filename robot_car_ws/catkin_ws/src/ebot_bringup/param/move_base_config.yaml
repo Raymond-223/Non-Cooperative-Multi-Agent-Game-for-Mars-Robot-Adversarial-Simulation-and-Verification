@@ -1,0 +1,121 @@
+# move_base 参数配置
+
+# 全局规划器的参数
+global_planner: "navfn/NavfnROS"  # 使用NavfnROS作为全局路径规划器
+base_global_planner: "navfn/NavfnROS"
+
+# 全局成本地图配置
+global_costmap:
+  global_frame: "map"
+  robot_base_frame: "base_footprint"
+  update_frequency: 1.0
+  resolution: 0.05  # 每个格子的大小（米）
+  width: 200  # 格子地图的宽度（单位：格子数）
+  height: 200  # 格子地图的高度（单位：格子数）
+  rolling_window: false
+
+  # 插件化的地图处理
+  plugins:
+    - {name: "static_layer", type: "costmap_2d::StaticLayer"}  # 使用 StaticLayer 加载静态地图
+    - {name: "obstacle_layer", type: "costmap_2d::ObstacleLayer"}
+    - {name: "inflation_layer", type: "costmap_2d::InflationLayer"}
+
+  # 配置障碍物层
+  obstacle_layer:
+    enabled: true
+    observation_sources: "laser_scan"
+    laser_scan:
+      topic: "/scan"  # 激光雷达的主题
+      data_type: "LaserScan"
+      max_obstacle_height: 2.0
+      min_obstacle_height: 0.0
+      observation_persistence: 0.0  # 持续时间
+      max_range: 10.0  # 激光雷达的最大感知范围
+      clear_after: 0.0  # 多长时间之后清除数据
+
+# 局部成本地图配置
+local_costmap:
+  global_frame: "map"
+  robot_base_frame: "base_footprint"
+  update_frequency: 5.0
+  resolution: 0.05
+  width: 3.0  # 局部地图的宽度（米）
+  height: 3.0  # 局部地图的高度（米）
+  rolling_window: true
+  robot_radius: 0.25  # 机器人半径（米）
+
+  # 插件化的地图处理
+  plugins:
+    - {name: "obstacle_layer", type: "costmap_2d::ObstacleLayer"}
+    - {name: "inflation_layer", type: "costmap_2d::InflationLayer"}
+
+  # 配置障碍物层
+  obstacle_layer:
+    enabled: true
+    observation_sources: "laser_scan"
+    laser_scan:
+      topic: "/scan"  # 激光雷达的主题
+      data_type: "LaserScan"
+      max_obstacle_height: 2.0
+      min_obstacle_height: 0.0
+      observation_persistence: 0.0  # 持续时间
+      max_range: 10.0  # 激光雷达的最大感知范围
+      clear_after: 0.0  # 多长时间之后清除数据
+
+# 使用 TebLocalPlannerROS 作为局部路径规划器
+controller:
+  base_local_planner: "teb_local_planner/TebLocalPlannerROS"  # 使用 TebLocalPlannerROS
+  max_vel_x: 0.5  # 最大线速度 (m/s)
+  min_vel_x: 0.1  # 最小线速度 (m/s)
+  max_vel_theta: 1.0  # 最大角速度 (rad/s)
+  min_vel_theta: 0.4  # 最小角速度 (rad/s)
+  acc_lim_x: 1.0  # 最大线加速度 (m/s^2)
+  acc_lim_theta: 2.0  # 最大角加速度 (rad/s^2)
+
+# TebLocalPlannerROS 参数
+TebLocalPlannerROS:
+  # 全局路径重写
+  global_plan_overwrite_orientation: true  # 重写全局路径的朝向（通常适用于动态环境）
+
+  # 速度限制
+  max_vel_x: 0.5  # 最大线速度
+  max_vel_theta: 1.0  # 最大角速度
+  acc_lim_x: 1.0  # 最大线加速度
+  acc_lim_theta: 2.0  # 最大角加速度
+  
+  # 步长控制
+  dt_ref: 0.3  # 参考时间步长（用于轨迹优化）
+  dt_hyst: 1.0  # 延迟时间步长（用于确保机器人的平稳性）
+  
+  # 路径优化
+  teb_autosize: true  # 自动调整轨迹大小
+  trajectory_local_radius: 3.0  # 规划时局部轨迹的半径
+  
+  # 足迹模型
+  footprint_model: "polygon"  # 机器人足迹模型（可以是"polygon"或"circular"）
+  robot_radius: 0.25  # 机器人半径（米）
+
+  # 障碍物避免
+  obstacles_behind_robot_dist: 1.0  # 机器人后方障碍物的感知距离（米）
+
+  # 路径优化的终止条件
+  max_iterations: 100  # 最大优化迭代次数
+  no_inner_iterations: 10  # 每次优化的内层迭代次数
+
+# 轨迹规划器配置
+trajectory_planner:
+  goal_distance_bias: 0.8
+  path_distance_bias: 0.6
+  occdist_scale: 0.01
+  forward_point_distance: 0.325
+  stop_time_buffer: 0.2
+  max_vel_x: 0.5
+  min_vel_x: 0.1
+  max_vel_theta: 1.0
+  min_vel_theta: 0.4
+
+# 路径规划者的参数
+planner_frequency: 1.0
+controller_frequency: 10.0
+planner_patience: 5.0
+controller_patience: 15.0

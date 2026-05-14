@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<launch>
+
+		<!-- 参数配置 -->    
+
+    <param name="use_sim_time" value="false" />
+
+		<!-- for amcl -->    
+    <arg name="init_x" default="0.0" />
+    <arg name="init_y" default="0.0" />
+    <arg name="init_a" default="0.0" />
+
+    <!-- 设置地图的配置文件 -->
+    <arg name="map" default="/home/nvidia/docker_noetic/demo.yaml" />
+
+    <!-- 导航设置 -->
+
+    <!-- 首先加载地图-->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map)"/>
+
+    <!-- 里程计 -->
+
+    <!--rf2o_Laser_Odometry-->
+    <include file="$(find ebot_bringup)/launch/rf2o_laser_odometry.launch"/>
+		
+		<!-- 地图匹配定位 -->
+    <!-- 启动AMCL定位节点 -->
+     <include file="$(find ebot_bringup)/launch/amcl.launch">
+		    <arg name="init_x" value="$(arg init_x)"/>
+        <arg name="init_y" value="$(arg init_y)"/>
+        <arg name="init_a" value="$(arg init_a)"/>
+    </include>
+
+</launch>

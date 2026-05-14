@@ -1,0 +1,5 @@
+<launch>
+	
+	<node pkg="rviz" type="rviz" name="rviz" args="-d $(find ebot_bringup)/rviz/bringup_once.rviz"/>  
+
+</launch>

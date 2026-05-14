@@ -1,0 +1,13 @@
+<launch>
+  <arg name="output" default="screen"/>
+  <arg name="port" default="/dev/serial/by-path/platform-3610000.xhci-usb-0:2.4:1.0-port0"/>
+  <arg name="baudrate" default="115200"/>
+
+  <node pkg="ultrasonic_sensors" type="ks114_485_roslaunch.py" name="ultrasonic_sensors" output="$(arg output)">
+    <param name="port" value="$(arg port)"/>
+    <param name="baudrate" value="$(arg baudrate)"/>
+    <rosparam command="load" file="$(find ultrasonic_sensors)/ultrasonic.yaml"/>
+
+  </node>
+
+</launch>
